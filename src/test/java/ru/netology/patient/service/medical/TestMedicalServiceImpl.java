@@ -1,6 +1,7 @@
 package ru.netology.patient.service.medical;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,12 +23,19 @@ import java.util.stream.Stream;
 
 public class TestMedicalServiceImpl {
 
+    PatientInfo patientInfo;
+    String message;
+
+    @BeforeEach
+    public void init(){
+        patientInfo = new PatientInfo(UUID.randomUUID().toString(),"Иван", "Петров",
+                LocalDate.of(1980, 11, 26), new HealthInfo(new BigDecimal("36.65"),
+                new BloodPressure(120, 80)));
+        message = String.format("Warning, patient with id: %s, need help", patientInfo.getId());
+    }
+
     @Test
     void checkBloodPressureMessage() {
-    PatientInfo patientInfo = new PatientInfo(UUID.randomUUID().toString(),"Иван", "Петров",
-            LocalDate.of(1980, 11, 26), new HealthInfo(new BigDecimal("36.65"),
-            new BloodPressure(120, 80)));
-    String message = String.format("Warning, patient with id: %s, need help", patientInfo.getId());
     PatientInfoRepository patientInfoRepository = Mockito.mock(PatientInfoRepository.class);
     Mockito.when(patientInfoRepository.getById(patientInfo.getId()))
             .thenReturn(patientInfo);
@@ -43,10 +51,6 @@ public class TestMedicalServiceImpl {
     @ParameterizedTest
     @MethodSource("source")
     void checkBloodPressureAlertWorking(BloodPressure currentPressure, int wantedNumber) {
-        PatientInfo patientInfo = new PatientInfo(UUID.randomUUID().toString(),"Иван", "Петров",
-                LocalDate.of(1980, 11, 26), new HealthInfo(new BigDecimal("36.65"),
-                new BloodPressure(120, 80)));
-        String message = String.format("Warning, patient with id: %s, need help", patientInfo.getId());
         PatientInfoRepository patientInfoRepository = Mockito.mock(PatientInfoRepository.class);
         Mockito.when(patientInfoRepository.getById(patientInfo.getId()))
                 .thenReturn(patientInfo);
@@ -66,10 +70,6 @@ public class TestMedicalServiceImpl {
     @ParameterizedTest
     @MethodSource("source1")
     void checkCheckTemperatureAlertWorking(BigDecimal currentTemperature, int wantedNumber) {
-        PatientInfo patientInfo = new PatientInfo(UUID.randomUUID().toString(),"Иван", "Петров",
-                LocalDate.of(1980, 11, 26), new HealthInfo(new BigDecimal("36.65"),
-                new BloodPressure(120, 80)));
-        String message = String.format("Warning, patient with id: %s, need help", patientInfo.getId());
         PatientInfoRepository patientInfoRepository = Mockito.mock(PatientInfoRepository.class);
         Mockito.when(patientInfoRepository.getById(patientInfo.getId()))
                 .thenReturn(patientInfo);
